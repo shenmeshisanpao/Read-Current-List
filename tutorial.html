@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>电流记录文件分析器使用教程</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; }
+        h1 { color: #2E86AB; border-bottom: 2px solid #2E86AB; }
+        h2 { color: #4A90E2; margin-top: 25px; }
+        h3 { color: #666; margin-top: 20px; }
+        .step { background-color: #f5f5f5; padding: 15px; margin: 10px 0; border-left: 4px solid #2E86AB; }
+        .warning { background-color: #fff3cd; padding: 10px; border: 1px solid #ffeaa7; border-radius: 4px; }
+        .tip { background-color: #d1ecf1; padding: 10px; border: 1px solid #bee5eb; border-radius: 4px; }
+        code { background-color: #f8f9fa; padding: 2px 4px; border-radius: 3px; font-family: Consolas, monospace; }
+        ul li { margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <h1>电流记录文件分析器使用教程</h1>
+    <p style=" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">本教程由 Z.C. Zhang 最后一次修改于2025年7月30日。 </p>
+    <h2>1. 软件概述</h2>
+    <p>本软件用于分析由电流监控系统生成的CSV格式记录文件，可以计算指定时间范围内的电荷量积分。支持单通道和双通道数据格式。</p>
+    
+    <h2>2. 文件要求</h2>
+    <div class="warning">
+        <h3>⚠️ 重要提醒</h3>
+        <ul>
+            <li>仅支持CSV格式的文件</li>
+            <li>仅支持单次监控会话的文件</li>
+            <li>不支持包含多个监控会话的文件（Append模式）</li>
+            <li>文件必须包含正确的表头格式</li>
+        </ul>
+    </div>
+    
+    <h2>3. 使用步骤</h2>
+    
+    <div class="step">
+        <h3>步骤1: 打开文件</h3>
+        <ul>
+            <li>点击"打开文件"按钮或使用菜单"文件 → 打开"</li>
+            <li>选择要分析的CSV文件</li>
+            <li>软件会自动验证文件格式和内容</li>
+            <li>成功加载后，会显示文件的基本信息</li>
+        </ul>
+    </div>
+    
+    <div class="step">
+        <h3>步骤2: 选择时间范围</h3>
+        <p><strong>全部时间:</strong> 分析整个文件记录的时间范围</p>
+        <p><strong>自定义时间段:</strong> 指定特定的开始和结束时间</p>
+    </div>
+    
+    <div class="step">
+        <h3>步骤3: 输入自定义时间（如果需要）</h3>
+        <p>支持三种时间输入方式，只需填入其中一种：</p>
+        <ul>
+            <li><strong>UTC时间戳:</strong> 如 <code>1752638106.8</code></li>
+            <li><strong>时间格式:</strong> 如 <code>20250727 15:41:15.100</code></li>
+            <li><strong>运行时间:</strong> 如 <code>120.5</code> (从监控开始的秒数)</li>
+        </ul>
+        <div class="tip">
+            <strong>💡 提示:</strong> 输入任意一种格式后，其他格式会自动计算并填入
+        </div>
+    </div>
+    
+    <div class="step">
+        <h3>步骤4: 计算结果</h3>
+        <ul>
+            <li>点击"计算"按钮</li>
+            <li>在结果区域查看计算结果</li>
+            <li>结果包括两个通道的电荷量积分</li>
+            <li>可以复制结果文本</li>
+        </ul>
+    </div>
+    
+    <h2>4. 时间格式说明</h2>
+    <table border="1" style="border-collapse: collapse; width: 100%; margin: 10px 0;">
+        <tr style="background-color: #f8f9fa;">
+            <th style="padding: 8px;">格式类型</th>
+            <th style="padding: 8px;">示例</th>
+            <th style="padding: 8px;">说明</th>
+        </tr>
+        <tr>
+            <td style="padding: 8px;">UTC时间戳</td>
+            <td style="padding: 8px;"><code>1752638106.8</code></td>
+            <td style="padding: 8px;">Unix时间戳，精确到小数</td>
+        </tr>
+        <tr>
+            <td style="padding: 8px;">时间格式</td>
+            <td style="padding: 8px;"><code>20250727 15:41:15.100</code></td>
+            <td style="padding: 8px;">年月日 时:分:秒.毫秒</td>
+        </tr>
+        <tr>
+            <td style="padding: 8px;">运行时间</td>
+            <td style="padding: 8px;"><code>120.5</code></td>
+            <td style="padding: 8px;">从监控开始的秒数</td>
+        </tr>
+    </table>
+    
+    <h2>5. 计算原理</h2>
+    <p>软件通过以下方式计算电荷量积分：</p>
+    <ul>
+        <li>读取文件中已计算的积分值</li>
+        <li>对于指定时间范围，计算起始和结束时刻的积分值</li>
+        <li>如果指定时间不在数据点上，使用线性插值方法估算</li>
+        <li>最终结果 = 结束时刻积分 - 开始时刻积分</li>
+    </ul>
+    
+    <h2>6. 常见问题</h2>
+    
+    <h3>Q: 为什么无法打开某些CSV文件？</h3>
+    <p>A: 可能的原因：</p>
+    <ul>
+        <li>文件不是正确的电流监控记录格式</li>
+        <li>文件包含多个监控会话（不支持）</li>
+        <li>文件头格式不正确</li>
+    </ul>
+    
+    <h3>Q: 时间转换不准确怎么办？</h3>
+    <p>A: 确保输入的时间格式正确，软件支持多种时间格式的自动识别。</p>
+    
+    <h3>Q: 如何获得更精确的结果？</h3>
+    <p>A: 软件使用线性插值方法，精度取决于原始数据的采样频率。选择更接近数据点的时间会获得更准确的结果。</p>
+    
+    <div class="tip">
+        <h3>💡 使用技巧</h3>
+        <ul>
+            <li>建议先查看文件的时间范围，再设定分析区间</li>
+            <li>可以多次计算不同时间段的结果进行对比</li>
+            <li>结果文本支持右键复制，方便保存到其他文档</li>
+        </ul>
+    </div>
+</body>
+</html>
